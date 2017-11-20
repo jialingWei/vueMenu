@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="vue.js"></script>
+	<style>
+	*
+	  {
+	  	 padding: 0;
+	  	 margin: 0;
+	  	 text-decoration: none;
+	  	 list-style: none;
+	  }
+	  body
+	  {
+	  	 font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;
+	  }
+      nav
+      {
+      	 height: 60px;
+      	 width: 100%;
+      	 background-color: black;
+      }
+      .side-menu
+      {
+      	position: fixed;
+      	left: 0;
+      	top: 83px;
+      	width: 150px;
+      	height: 100%;
+      	border: 1px solid #e0e0e0;
+        background-color: #ffffff;
+      }
+      a
+      {
+      	color: black;
+      }
+      .side-menu>li>a
+      {
+      	display: block;
+      	padding: 10px;
+      	font-size: 16px;
+      	padding-left: 25px;
+      }
+      .sub-ul
+      {
+         transition:all,.2s,ease-in-out;
+         overflow: hidden;
+      }
+      .hide
+      {
+      	 height: 0px !important;
+      	
+      }
+      .sub-ul a
+      {
+      	font-size: 12px;
+      	padding: 8px;
+      	display: block;
+      	padding-left: 40px;
+      }
+      i
+      {
+        display: inline-block;
+        vertical-align: middle;
+        overflow: hidden;
+        width: 20px;
+        height: 20px;
+      }
+      .active
+      {
+      	background-color: #1c81e6;
+        color: #ffffff;
+      }
+      i.overview-icon
+      {
+      	background-position:  0px -16px;
+      }
+      i.knowledge-icon
+      {
+      	background-position: -20px -16px;
+      }
+      i.data-icon
+      {
+      	background-position: -40px -16px;
+      }
+      i.down-arrow
+      {
+        background-position: -72px -36px;
+        width: 12px;
+        height: 12px;
+        transition:all,.2s,ease-in-out;
+      }
+      i.flip
+      {
+      	transform:rotate(180deg);
+      }
+	</style>
+</head>
+<body>
+	<template id="side-menu">
+  		<ul class='side-menu'>
+  		    <li v-for="(i,pItem) in sideMenuItems">
+	    	     <template v-if="pItem.food">
+			         <a href="javascript:void(0)" v-on:click='toggle(i)'>
+		                <i v-bind:class='[pItem.icon]'></i>
+		                {{pItem.name}}
+		                <i class="down-arrow" v-bind:class="{'flip':hideIndex[i]==false}" ></i>
+			         </a>	        
+		  		    <ul v-if='pItem.food' class='sub-ul' v-bind:class="{'hide':hideIndex[i]==true}" v-bind:style="{height:(pItem.food.length)*32+'px'}">
+		                <li v-for="(j,cItem) in pItem.food">
+		                   <a href="javascript:void(0)" v-on:click='change(i+1,j+1)' v-bind:class="{'active':activeIndex==10*(i+1)+(j+1)}">{{cItem.name}}</a>
+		                </li> 
+		  		    </ul>	  	
+	    	     </template>
+	    	     <template v-else>
+			         <a href="javascript:void(0)" v-on:click='change(i+1)' v-bind:class="{'active':activeIndex==10*(i+1)}">
+	                <i v-bind:class='[pItem.icon]'></i>
+	                {{pItem.name}}
+			         </a>	  		           	
+	    	     </template>
+  		    </li>
+  		</ul>
+	</template>
+	<div id="app">
+	  <nav></nav>
+	 
+      <side-menu :side-menu-items='sideMenuItems' :test='test'></side-menu>
+	</div>
+	<script>
+Vue.component('side-menu', {
+  props:['sideMenuItems'],
+  template: '#side-menu',
+  data:function()
+  {
+    return     {
+    	activeIndex:10,
+    	hideIndex:[],
+    }
+
+  },
+  	methods:
+	{
+		change:function(i,j)
+		{
+            i=i||0;
+            j=j||0;
+            this.activeIndex=i*10+j;
+		},
+		toggle:function(i)
+		{
+
+	
+			if(this.hideIndex[i])
+			{
+				this.hideIndex.$set(i, false);
+			}
+			else
+			{
+				this.hideIndex.$set(i, true); 
+			}
+		},
+		
+	}
+})
+
+new Vue(
+{
+	el: '#app',
+	data:
+	{       	
+	sideMenuItems:[{"type_id":1,"name":"大菜","food":[
+											{"food_id":1,"name":"鱼香肉丝","price":"10"},
+                                            {"food_id":2,"name":"红烧肉","price":"11"},
+                                            {"food_id":3,"name":"香辣粉","price":"12"}
+                                            ]},
+            {"type_id":2,"name":"中菜","food":[
+                                            {"food_id":4,"name":"小炒肉","price":"13"},
+                                            {"food_id":5,"name":"云吞","price":"14"}
+                                            ]},
+            {"type_id":3,"name":"小菜","food":[
+                                            {"food_id":6,"name":"雪糕","price":"15"},
+                                            {"food_id":7,"name":"黄瓜","price":"16"}
+                                            ]}      
+        ]
+	}
+	
+	
+})
+
+		
+
+	</script>
+</body>
+</html>
